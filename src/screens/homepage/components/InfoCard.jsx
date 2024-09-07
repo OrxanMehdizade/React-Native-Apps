@@ -1,8 +1,15 @@
-import { StyledText, StyledView } from '@common/StyledComponents';
+import { StyledText,StyledTouchableOpacity } from '@common/StyledComponents';
+import { useNavigation } from '@react-navigation/native';
 
 const InfoCard = ({ cardItem }) => {
+    const navigation=useNavigation();
+
     return (
-        <StyledView className="w-auto bg-slate-500 p-5 shadow-zinc-300 rounded-lg m-5">
+        <StyledTouchableOpacity onPress={
+            ()=>{
+                navigation.navigate('DetailsPage',{dataItems:cardItem})
+            }
+        } className="w-auto bg-slate-500 p-5 shadow-zinc-300 rounded-lg m-5">
             <StyledText className="mb-1 text-white font-semibold">
                 {cardItem.name}
             </StyledText>
@@ -12,7 +19,7 @@ const InfoCard = ({ cardItem }) => {
             <StyledText className="text-white text-right ">
                 {cardItem.company.name}
             </StyledText>
-        </StyledView>
+        </StyledTouchableOpacity>
     );
 };
 

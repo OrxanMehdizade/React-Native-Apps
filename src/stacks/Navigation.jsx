@@ -1,14 +1,28 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { NavigationContainer } from '@react-navigation/native';
+import TabStack from './TabStack';
+import AuthStack from './AuthStack';
 
 const Navigation = () => {
+  const isAuthenticated = true;
+
+  const linking={
+    prefixes: ['ReactNativeApps://'],
+    config:{
+      screens: {
+        Homepage: 'homepage',
+        DetailsPage:'details/:id'
+        },
+    },
+  };
+
   return (
-    <View>
-      <Text>Navigation</Text>
-    </View>
+    <NavigationContainer linking={linking}>
+      {
+        isAuthenticated ? <TabStack /> : <AuthStack />
+      }
+
+    </NavigationContainer>
   )
 }
 
-export default Navigation
-
-const styles = StyleSheet.create({})
+export default Navigation;
