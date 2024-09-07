@@ -3,15 +3,34 @@ import TabStack from './TabStack';
 import AuthStack from './AuthStack';
 
 const Navigation = () => {
-  const isAuthenticated = true;
+  const isAuthenticated = false;
 
-  const linking={
-    prefixes: ['ReactNativeApps://'],
-    config:{
+
+  const linking = {
+    prefixes: ['reactNativeApps://'],
+    config: {
       screens: {
-        Homepage: 'homepage',
-        DetailsPage:'details/:id'
+        Home: {
+          path: 'home/',
+          screens: {
+            Homepage: {
+              path: 'homepage/',
+            },
+            DetailsPage: {
+              path: 'details/:id',
+            },
+          },
         },
+
+        Profile: {
+          path: 'profile/',
+          screens: {
+            Profile: {
+              path: 'index/',
+            },
+          },
+        },
+      },
     },
   };
 
