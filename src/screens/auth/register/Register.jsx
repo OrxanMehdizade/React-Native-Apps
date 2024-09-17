@@ -1,36 +1,41 @@
-import { StyledView, StyledText, StyledTouchableOpacity, } from '@common/StyledComponents';
+import { StyledView, StyledText, StyledTouchableOpacity } from '@common/StyledComponents';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Input from '../components/Input';
 import PasswordInput from '../components/PasswordInput';
+import { storage } from '@utils/MMKVStorage';
 
 const Register = () => {
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({
+        username: '',
+        email: '',
+        password: ''
+    });
     const [errors, setErrors] = useState({});
     const navigation = useNavigation();
 
     const submitData = async () => {
-        try{
-            const response= await fetch('http://localhost:5000/api/users/register',{
-              method:'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(formData),
+        try {
+            const response = await fetch('http://10.2.11.10:5000/api/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
             });
-        
-            const data= await response.json();
-            console(data)
+
+            const data = await response.json();
+            console.log(data);
             if (response.ok) {
-              storage.set('accessToken', JSON.stringify(data));
-              navigation.navigate('login');
+                storage.set('accessToken', data.token); 
+                navigation.navigate('Login');
             } else {
-              setErrors(result.errors || {});
+                setErrors(data.errors || {});
             }
-          }catch(error){
+        } catch (error) {
             console.error('Error during register:', error);
-          }
+        }
     };
 
     const handleInputChange = (inputName, inputValue) => {
@@ -47,34 +52,16 @@ const Register = () => {
                 </StyledText>
 
                 <Input
-                    inputName="name"
-                    inputValue={formData?.name}
+                    inputName="username"
+                    inputValue={formData.username}
                     handleInputChange={handleInputChange}
-                    placeholder="Enter name"
-                    error={errors?.name}
-                />
-
-                <Input
-                    inputName="surname"
-                    inputValue={formData?.surname}
-                    handleInputChange={handleInputChange}
-                    placeholder="Enter surname"
-                    error={errors?.surname}
-                />
-
-                <Input
-                    inputName="about"
-                    inputValue={formData?.about}
-                    handleInputChange={handleInputChange}
-                    placeholder="Write about yourself"
-                    error={errors?.about}
-                    multiline={true}
-                    height={100}
+                    placeholder="Enter username"
+                    error={errors?.username}
                 />
 
                 <Input
                     inputName="email"
-                    inputValue={formData?.email}
+                    inputValue={formData.email}
                     handleInputChange={handleInputChange}
                     placeholder="Enter email"
                     error={errors?.email}
