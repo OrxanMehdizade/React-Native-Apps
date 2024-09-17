@@ -4,14 +4,38 @@ import {useState} from 'react';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Input from '../components/Input';
 import PasswordInput from '../components/PasswordInput';
+import { storage } from '@utils/MMKVStorage';
+
 
 const Login = () => {
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const navigation = useNavigation();
 
-  const submitData = () => {
-    console.log(formData);
+
+
+  const submitData = async () => {
+    try{
+      const response= await fetch('http://localhost:5000/api/users/login',{
+        method:'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      const data= await response.json();
+      
+      if (response.ok) {
+        storage.set('accessToken', JSON.stringify(data));
+        navigation.navigate('Home', {screen: 'Homepage'});
+      } else {
+        setErrors(result.errors || {});
+      }
+    }catch(error){
+      console.error('Error during login:', error);
+    }
+
   };
 
   const handleInputChange = (inputName, inputValue) => {

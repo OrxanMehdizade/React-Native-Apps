@@ -10,8 +10,27 @@ const Register = () => {
     const [errors, setErrors] = useState({});
     const navigation = useNavigation();
 
-    const submitData = () => {
-        console.log(formData);
+    const submitData = async () => {
+        try{
+            const response= await fetch('http://localhost:5000/api/users/register',{
+              method:'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(formData),
+            });
+        
+            const data= await response.json();
+            console(data)
+            if (response.ok) {
+              storage.set('accessToken', JSON.stringify(data));
+              navigation.navigate('login');
+            } else {
+              setErrors(result.errors || {});
+            }
+          }catch(error){
+            console.error('Error during register:', error);
+          }
     };
 
     const handleInputChange = (inputName, inputValue) => {
